@@ -18,3 +18,17 @@ def create_message():
                       to_user,time, subject)
     m = DBManager({'db_config':db_config})
     m.create(m)
+
+def inbox():
+    manager = DBManager({'db_config':db_config})
+    result = manager.read_all(user_inf._id, Message)
+    for item in result:
+        if item[3] == user_inf._id:
+            print(item[1])
+
+def sent_box():
+    manager = DBManager({'db_config':db_config})
+    result = manager.read_all(user_inf._id, Message)
+    for item in result:
+        if item[2] == user_inf._id:
+            print(item[1])

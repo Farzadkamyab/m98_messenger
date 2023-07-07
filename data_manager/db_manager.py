@@ -101,8 +101,6 @@ class DBManager(BaseManager):
         for model_data in models_data:
             yield model_cls.from_dict(model_data)
         
-
-
     def truncate(self, model_cls: type) -> None:
         assert issubclass(model_cls, BaseModel)
         assert getattr(model_cls, 'TABLE_NAME', None), "Could not find TABLE NAME"
@@ -111,5 +109,12 @@ class DBManager(BaseManager):
             curs.execute(f"TRUNCATE TABLE {model_cls.TABLE_NAME}")
         self.__conn.commit()
 
-    
-    
+    def login(self, uname, passwd, model_cls: type):
+        assert issubclass(model_cls, BaseModel)
+        assert getattr(model_cls, 'TABLE_NAME', None), "Could not find TABLE NAME"
+
+        with self.__conn.cursor() as curs:
+            curs.execute(f"SELECT * FROM {model_cls.TABLE_NAME} WHERE username = '{uname}' AND password = '{passwd}'")
+            if res:= curs.fetchone():
+                result = self.read(res[0], model_cls)
+                return result
