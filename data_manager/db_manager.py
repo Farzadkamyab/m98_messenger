@@ -105,9 +105,10 @@ class DBManager(BaseManager):
 
     def truncate(self, model_cls: type) -> None:
         assert issubclass(model_cls, BaseModel)
-
+        assert getattr(model_cls, 'TABLE_NAME', None), "Could not find TABLE NAME"
+        
         with self.__conn.cursor() as curs:
-            curs.execute(f"TRUNCATE {model_cls.TABLE_NAME}")
+            curs.execute(f"TRUNCATE TABLE {model_cls.TABLE_NAME}")
         self.__conn.commit()
 
     
