@@ -1,5 +1,6 @@
 from data_manager import BaseModel
 from dataclasses import dataclass
+import datetime
 
 @dataclass
 class User(BaseModel):
@@ -17,4 +18,17 @@ class User(BaseModel):
 
 @dataclass
 class Message(BaseModel):
-    pass
+    TABLE_NAME = 'Messages'
+    COLUMNS = {
+        'message': ('message', 'VARCHAR(500)', 'NOT NULL'),
+        'from_user':('from_user', 'BIGINT', 'NOT NULL'),
+        'to_user':('to_user', 'BIGINT', 'NOT NULL'),
+        'time':('time', 'TIMESTAMP', 'NOT NULL'),
+        'subject':('subject', 'VARCHAR(50)', 'NULL')
+    }
+
+    message: str
+    from_user: BaseModel
+    to_user: BaseModel
+    time: datetime
+    subject: str
