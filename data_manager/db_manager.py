@@ -71,7 +71,10 @@ class DBManager(BaseManager):
 
 
     def update(self, m: BaseModel) -> None:
+        assert getattr(m, "_id", None)
+        
         data = m.to_dict()
+        id = data.pop('_id')
         for k, v in data.items():
             new_data = ",".join(f"{k}={self.converter_model_to_query(v)}")
             with self.__conn.cursor() as curs:
@@ -84,8 +87,6 @@ class DBManager(BaseManager):
         with self.__conn.cursor() as curs:
             curs.execute(f"DELETE FROM {model_cls.TABLE_NAME} WHERE _id = %s", (id, ))
         self.__conn.commit()
-
-
 
     def read_all(self, model_cls: type):
         assert issubclass(model_cls, BaseModel)
